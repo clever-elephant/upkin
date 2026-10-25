@@ -53,7 +53,7 @@ extension AppDelegate {
     func verifyStateEvents() async throws {
         let root = FIXTURE_ROOT
         try await self.waitUntil { self.statusItem.button?.image != nil && self.stateWatcher != nil }
-        precondition(self.statusItem.isVisible && self.statusItem.button!.image!.size.width == (self.menuBar.hasWaiting ? 70 : 65),
+        precondition(self.statusItem.isVisible && [44.0, 60.0].contains(self.statusItem.button!.image!.size.width),
             "Legacy island preference must still show the single menu-bar layout")
         precondition(self.timer?.timeInterval == 600)
         precondition(self.stateWatcher != nil)
@@ -88,6 +88,7 @@ extension AppDelegate {
         try handle.write(contentsOf: Data("{\"type\":\"response_item\",\"payload\":{\"type\":\"function_call\",\"name\":\"functions.request_user_input\"}}\n".utf8))
         try handle.close()
         try await self.waitUntil { self.menuBar.emotion == .waiting && self.menuBar.hasWaiting }
+        precondition(self.statusItem.button!.image!.size.width == 60, "Waiting must not add a dot or widen the menu-bar item")
         let completionHandle = try FileHandle(forWritingTo: file)
         try completionHandle.seekToEnd()
         try completionHandle.write(contentsOf: codexEvent("task_complete"))
@@ -109,7 +110,7 @@ extension AppDelegate {
         let expiredReadCount = self.fixtureActivityReads
         try await Task.sleep(for: .seconds(4))
         precondition(self.fixtureActivityReads == expiredReadCount, "Completed Codex turn must expire once, not schedule repeated cache reads")
-        precondition(self.statusItem.button!.image!.size.width == (self.menuBar.hasWaiting ? 70 : 65))
+        precondition(self.statusItem.button!.image!.size.width == 60)
         try await Task.sleep(for: .seconds(2))
         let agentDirectory = root.appendingPathComponent("activity")
         var grok = AgentTask(provider: .grok, sessionID: "GROK_A", phase: .working,
@@ -120,7 +121,7 @@ extension AppDelegate {
         try JSONEncoder().encode(claude).write(to: agentDirectory.appendingPathComponent("claude.json"), options: .atomic)
         try await self.waitUntil { self.agentActivity.runningCount == 1 && self.agentActivity.waitingCount == 1 }
         precondition(self.menuBar.provider == .grok && self.characterView.character == "grok")
-        precondition(self.statusItem.button!.image!.size.width == (self.menuBar.hasWaiting ? 70 : 65))
+        precondition(self.statusItem.button!.image!.size.width == 60)
         precondition(self.statusItem.button!.subviews.compactMap { $0 as? GrokBallView }.isEmpty,
             "Native playback uses a compositor layer without an animated subview")
         precondition(self.characterView.animationLayer.superlayer === self.statusItem.button!.layer)
@@ -154,7 +155,7 @@ extension AppDelegate {
         try JSONEncoder().encode(claude).write(to: agentDirectory.appendingPathComponent("claude.json"), options: .atomic)
         try await self.waitUntil { self.menuBar.provider == .claude }
         precondition(self.characterView.character == "clawd" && self.characterView.superview == nil && self.characterView.playbackWindow === self.statusItem.button?.window)
-        precondition(self.statusItem.button!.image!.size.width == (self.menuBar.hasWaiting ? 70 : 65))
+        precondition(self.statusItem.button!.image!.size.width == 60)
         let timestamp = ISO8601DateFormatter().string(from: Date().addingTimeInterval(1))
         let nextCodex = "{\"timestamp\":\"\(timestamp)\",\"type\":\"event_msg\",\"payload\":{\"type\":\"task_started\"}}\n"
         let nextHandle = try FileHandle(forWritingTo: file)
@@ -163,7 +164,7 @@ extension AppDelegate {
         try nextHandle.close()
         try await self.waitUntil { self.menuBar.provider == nil }
         precondition(self.characterView.character == "chatgpt" && self.characterView.currentImage != nil && self.statusItem.button!.subviews.compactMap { $0 as? GrokBallView }.isEmpty)
-        precondition(self.statusItem.button!.image!.size.width == (self.menuBar.hasWaiting ? 70 : 65))
+        precondition(self.statusItem.button!.image!.size.width == 60)
         let finalHandle = try FileHandle(forWritingTo: file)
         try finalHandle.seekToEnd()
         try finalHandle.write(contentsOf: codexEvent("task_complete"))

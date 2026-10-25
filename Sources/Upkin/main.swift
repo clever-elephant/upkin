@@ -360,7 +360,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let frame = self.characterView.currentImage ?? self.runnerImage
         let percent = self.snapshot?.weekly?.roundedRemainingPercent
         let scale = button.window?.backingScaleFactor ?? 2
-        let key = "\(self.menuBarAnimationKey):\(self.menuBar.hasWaiting):\(percent ?? -1):\(button.effectiveAppearance.name.rawValue):\(scale)"
+        let key = "\(self.menuBarAnimationKey):\(percent ?? -1):\(button.effectiveAppearance.name.rawValue):\(scale)"
         if self.menuBarRenderKey != key {
             self.menuBarRenderKey = key
             var image: NSImage!
@@ -371,7 +371,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                 // Source-out backdrop erasure is unavailable on Intel; keep the live layer unobstructed.
                 let fallback = self.characterView.isHidden ? self.runnerImage : NSImage(size: NSSize(width: 36, height: 22))
 #endif
-                image = MenuBarQuotaImage.makeRasterized(remainingPercent: percent, runnerImage: fallback, scale: scale, hasWaiting: self.menuBar.hasWaiting)
+                image = MenuBarQuotaImage.makeRasterized(remainingPercent: percent, runnerImage: fallback, scale: scale)
             }
             if button.image !== image {
                 self.statusItem.length = image.size.width
@@ -382,7 +382,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         button.wantsLayer = true
-        let origin = NSPoint(x: (button.bounds.width - (button.image?.size.width ?? 65)) / 2, y: button.bounds.midY - 11)
+        let origin = NSPoint(x: (button.bounds.width - (button.image?.size.width ?? button.bounds.width)) / 2, y: button.bounds.midY - 11)
         CATransaction.begin()
         CATransaction.setDisableActions(true)
         self.characterBackdrop.frame = NSRect(origin: origin, size: NSSize(width: 32, height: 22))

@@ -25,10 +25,11 @@ struct Check {
                     let standard = MenuBarQuotaImage.make(
                         remainingPercent: percent,
                         runnerImage: runner)
-                    precondition(standard.size == NSSize(width: 70, height: 22))
+                    let width = percent == nil ? 44 : (percent == 0 ? 52 : (percent == 100 ? 68 : 60))
+                    precondition(standard.size == NSSize(width: width, height: 22))
                     precondition(standard.isTemplate == template)
                     let bitmap = NSBitmapImageRep(bitmapDataPlanes: nil,
-                        pixelsWide: 70 * scale, pixelsHigh: 22 * scale,
+                        pixelsWide: width * scale, pixelsHigh: 22 * scale,
                         bitsPerSample: 8, samplesPerPixel: 4, hasAlpha: true,
                         isPlanar: false, colorSpaceName: .deviceRGB, bytesPerRow: 0, bitsPerPixel: 0)!
                     NSGraphicsContext.saveGraphicsState()
@@ -37,8 +38,12 @@ struct Check {
                     standard.draw(in: NSRect(origin: .zero, size: standard.size))
                     NSGraphicsContext.restoreGraphicsState()
                     outputs.insert(bitmap.representation(using: .png, properties: [:])!)
-                    // 100% must fit with a clear trailing margin at both display scales.
-                    precondition(bitmap.colorAt(x: 69 * scale, y: 11 * scale)!.alphaComponent == 0)
+                    let text = (percent.map { "\($0)%" } ?? "--") as NSString
+                    let textWidth = text.size(withAttributes: [
+                        .font: NSFont.monospacedDigitSystemFont(ofSize: 12, weight: .semibold)
+                    ]).width
+                    precondition(CGFloat(width) >= 32 + textWidth && CGFloat(width) < 33 + textWidth,
+                        "Quota must fit without extra trailing padding")
                 }
                 precondition(outputs.count == 4, "Standard quota values must render distinctly at 1x and 2x")
             }
@@ -47,8 +52,8 @@ struct Check {
         for scale: CGFloat in [1, 2] {
             let raster = MenuBarQuotaImage.makeRasterized(remainingPercent: 85, runnerImage: runner, scale: scale)
             let bitmap = raster.representations.first as! NSBitmapImageRep
-            precondition(raster.size == NSSize(width: 70, height: 22))
-            precondition(bitmap.pixelsWide == Int(70 * scale) && bitmap.pixelsHigh == Int(22 * scale))
+            precondition(raster.size == NSSize(width: 60, height: 22))
+            precondition(bitmap.pixelsWide == Int(60 * scale) && bitmap.pixelsHigh == Int(22 * scale))
             precondition(bitmap.hasAlpha && !raster.isTemplate)
             var visible = false
             for y in 0..<bitmap.pixelsHigh {
