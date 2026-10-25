@@ -4,11 +4,10 @@ permissions:
   contents: read
 jobs:
   core:
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - run: sudo xcode-select --switch /Applications/Xcode_16.4.app/Contents/Developer
       - run: swift --version
       - uses: actions/setup-node@v4
         with:
