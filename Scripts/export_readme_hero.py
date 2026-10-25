@@ -7,11 +7,12 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parents[1]
 FRAMES = ROOT / 'Resources/CharacterFrames'
 OUT = ROOT / 'docs/media/hero.gif'
-CHARACTERS = [('chatgpt', 'Codex'), ('clawd', 'Claude Code'), ('grok', 'Grok Build')]
+ARTWORK = ROOT / '.codex-qa/readme-frames'
+CHARACTERS = [('chatgpt', 'ChatGPT · Codex'), ('clawd', 'Claude Code'), ('grok', 'Grok Build')]
 # Each segment plays at least one complete cycle of every character; one-shot states hold their last frame.
 STATES = [('30', 'thinking'), ('32', 'working'), ('35', 'waiting for you'), ('33', 'done')]
 HOLD = 30
-CELL, SCALE, HEIGHT, FPS = 240, 3, 230, 15
+CELL, HEIGHT, FPS = 480, 460, 15
 
 
 def font(size):
@@ -39,13 +40,13 @@ cache = {}
 def sprite(character, state, index):
     key = (character, state, index)
     if key not in cache:
-        image = Image.open(FRAMES / character / state / f'{index}.png').convert('RGBA')
-        resample = Image.Resampling.NEAREST if character == 'clawd' else Image.Resampling.LANCZOS
-        cache[key] = image.resize((image.width * SCALE, image.height * SCALE), resample)
+        image = Image.open(ARTWORK / character / state / f'{index}.png').convert('RGBA')
+        assert image.size == (432, 264), f'Render high-resolution artwork first: {character}/{state}/{index}'
+        cache[key] = image
     return cache[key]
 
 
-title, caption = font(17), font(15)
+title, caption = font(34), font(30)
 width = CELL * len(CHARACTERS)
 frames = []
 for state, label in STATES:
@@ -60,9 +61,9 @@ for state, label in STATES:
             index = tick % count if loops[character] else min(tick, count - 1)
             image = sprite(character, state, index)
             x = column * CELL + (CELL - image.width) // 2
-            canvas.paste(image, (x, 28), image)
-            draw.text((column * CELL + CELL / 2, 186), name, font=title, fill=(52, 58, 70), anchor='mm')
-        draw.text((width / 2, 14), label, font=caption, fill=(110, 118, 132), anchor='mm')
+            canvas.paste(image, (x, 56), image)
+            draw.text((column * CELL + CELL / 2, 372), name, font=title, fill=(52, 58, 70), anchor='mm')
+        draw.text((width / 2, 28), label, font=caption, fill=(110, 118, 132), anchor='mm')
         frames.append(canvas)
 
 atlas = Image.new('RGB', (width, HEIGHT * 12))
@@ -72,4 +73,12 @@ palette = atlas.quantize(colors=255)
 indexed = [frame.quantize(palette=palette, dither=Image.Dither.NONE) for frame in frames]
 durations = [round((i + 1) * 100 / FPS) * 10 - round(i * 100 / FPS) * 10 for i in range(len(frames))]
 indexed[0].save(OUT, save_all=True, append_images=indexed[1:], duration=durations, loop=0, disposal=1, optimize=True)
-print(f'{OUT.relative_to(ROOT)}: {len(frames)} frames, {sum(durations) / 1000:.1f}s, {OUT.stat().st_size // 1024} KB')
+# GIF merges identical hold frames; verify playback time rather than encoded frame count.
+with Image.open(OUT) as result:
+    assert result.size == (1440, 460) and result.n_frames > 1 and result.info['loop'] == 0
+    elapsed = 0
+    for index in range(result.n_frames):
+        result.seek(index)
+        elapsed += result.info['duration']
+    assert elapsed == sum(durations)
+    print(f'{OUT.relative_to(ROOT)}: {result.n_frames} encoded frames, {elapsed / 1000:.1f}s, {OUT.stat().st_size // 1024} KB')
