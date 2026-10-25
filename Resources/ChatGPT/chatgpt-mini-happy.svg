@@ -1,0 +1,69 @@
+<svg id="chatgpt" xmlns="http://www.w3.org/2000/svg" width="880" height="720" viewBox="-32 -24 88 72" preserveAspectRatio="xMidYMid meet">
+<style><![CDATA[.edge-contact{stroke-opacity:.18}.edge-rim-soft{stroke-opacity:.1}.edge-rim-tight{stroke-opacity:.15}.cloud-drop-shadow{flood-opacity:.13}]]></style>
+<defs>
+      <linearGradient id="body-grad" x1="12" y1="2" x2="12" y2="22" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#ffffff"/>
+        <stop offset="0.5" stop-color="#f4f5f9"/>
+        <stop offset="1" stop-color="#dee2eb"/>
+      </linearGradient>
+      <linearGradient id="eye-grad" x1="12" y1="9.5" x2="12" y2="15" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#55535f"/>
+        <stop offset=".5" stop-color="#353440"/>
+        <stop offset="1" stop-color="#25242f"/>
+      </linearGradient>
+      <radialGradient id="hi-grad" cx="0.45" cy="0.25" r="0.55">
+        <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+        <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="drop" x="-40%" y="-40%" width="180%" height="180%">
+        <feDropShadow class="cloud-drop-shadow" id="drop-shadow" dx="0" dy="0.6" stdDeviation="0.8" flood-color="#3941FF" flood-opacity="0.18"/>
+      </filter>
+      <filter id="edge-blur" x="-40%" y="-40%" width="180%" height="180%">
+        <feGaussianBlur stdDeviation="0.16"/>
+      </filter>
+      <path id="cloud-shape" d="M9.064 3.344a4.578 4.578 0 012.285-.312c1 .115 1.891.54 2.673 1.275.01.01.024.017.037.021a.09.09 0 00.043 0 4.55 4.55 0 013.046.275l.047.022.116.057a4.581 4.581 0 012.188 2.399c.209.51.313 1.041.315 1.595a4.24 4.24 0 01-.134 1.223.123.123 0 00.03.115c.594.607.988 1.33 1.183 2.17.289 1.425-.007 2.71-.887 3.854l-.136.166a4.548 4.548 0 01-2.201 1.388.123.123 0 00-.081.076c-.191.551-.383 1.023-.74 1.494-.9 1.187-2.222 1.846-3.711 1.838-1.187-.006-2.239-.44-3.157-1.302a.107.107 0 00-.105-.024c-.388.125-.78.143-1.204.138a4.441 4.441 0 01-1.945-.466 4.544 4.544 0 01-1.61-1.335c-.152-.202-.303-.392-.414-.617a5.81 5.81 0 01-.37-.961 4.582 4.582 0 01-.014-2.298.124.124 0 00.006-.056.085.085 0 00-.027-.048 4.467 4.467 0 01-1.034-1.651 3.896 3.896 0 01-.251-1.192 5.189 5.189 0 01.141-1.6c.337-1.112.982-1.985 1.933-2.618.212-.141.413-.251.601-.33.215-.089.43-.164.646-.227a.098.098 0 00.065-.066 4.51 4.51 0 01.829-1.615 4.535 4.535 0 011.837-1.388z"/>
+      <clipPath id="cloud-clip">
+        <use href="#cloud-shape"/>
+      </clipPath>
+    </defs>
+<g id="pose">
+<g id="cloud-group">
+      <g id="edge-system">
+        <use class="edge-contact" href="#cloud-shape" fill="none" stroke="#7d8aa7" stroke-width="1.05" stroke-linejoin="round" transform="translate(0 0.18)" filter="url(#edge-blur)"/>
+        <use class="edge-rim-soft" href="#cloud-shape" fill="none" stroke="#7A9DFF" stroke-width="0.90" stroke-linejoin="round" filter="url(#edge-blur)"/>
+        <use class="edge-rim-tight" href="#cloud-shape" fill="none" stroke="#aab3c6" stroke-width="0.42" stroke-linejoin="round"/>
+      </g>
+      <g filter="url(#drop)">
+        <use href="#cloud-shape" fill="url(#body-grad)"/>
+        <rect x="1" y="2" width="22" height="11" fill="url(#hi-grad)" clip-path="url(#cloud-clip)"/>
+      </g>
+    </g>
+
+    
+<g id="gaze"><g id="face" fill="url(#eye-grad)"><path d="M7.1 12.8C7.45 9.7 10.55 9.7 10.9 12.8Q10.15 13.2 9.8 12.3Q9 11.25 8.2 12.3Q7.85 13.2 7.1 12.8ZM13.1 12.8C13.45 9.7 16.55 9.7 16.9 12.8Q16.15 13.2 15.8 12.3Q15 11.25 14.2 12.3Q13.85 13.2 13.1 12.8Z"/></g></g>
+</g>
+<script type="application/ecmascript"><![CDATA[
+const MAIN_SECONDS=2.2, CYCLE_SECONDS=2.2;
+const pose=document.getElementById('pose'), gaze=document.getElementById('gaze');
+const round=n=>Number(n.toFixed(5));
+const ease=x=>{x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);};
+const wave=(x,a,b)=>Math.sin(Math.PI*ease((x-a)/(b-a)));
+const startT=performance.now();
+function loop(now) {
+ const t=(now-startT)/1000, local=Math.min(t,CYCLE_SECONDS), p=local%4;
+ const angle=2*Math.PI*p/4;
+ let x=0,y=0,rot=0,sx=.96,sy=.96,gx=0,gy=0,blink=1;
+
+  // One squash, lift, land, settle; the smile holds after the event finishes.
+  const squash=wave(local,0,.32),jump=wave(local,.24,1.25),land=wave(local,1.15,1.65);
+  sx=.94+.11*squash-.02*jump+.06*land;
+  sy=.94-.12*squash-.02*jump-.06*land;y=.45-1.9*jump+.22*land;
+  blink=.88+.12*ease(local/.35);
+
+ pose.setAttribute('transform',`translate(${round(x)} ${round(y)}) translate(12 12) rotate(${round(rot)}) scale(${round(sx)} ${round(sy)}) translate(-12 -12)`);
+ gaze.setAttribute('transform',`translate(${round(gx)} ${round(gy)}) translate(0 12) scale(1 ${round(blink)}) translate(0 -12)`);
+ requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+]]></script>
+</svg>

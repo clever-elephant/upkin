@@ -1,0 +1,23 @@
+Clawd (Upkin rendition)
+Base rectangular pixel geometry and palette adapted from clawd-pet:
+https://github.com/abderrahimghazali/clawd-pet/blob/main/public/pets/clawd-happy.svg
+Git blob SHA: 6c1a9f0e47e1b9643bdb6403f1f8f32285988375
+Copyright (c) 2026 Abderrahim GHAZALI. MIT License (included in LICENSE).
+
+Original Upkin state animations and local geometry adaptations:
+Copyright (c) 2026 Upkin contributors. AGPL-3.0 (included in LICENSE).
+The local adapter keeps seven states and a stable 4-second main beat;
+working gently breathes with a stable face and upper-right +, −, ×, ÷ operators
+advancing once per second over a complete 4-second cycle; raised claws retain their 2x2
+base shape; error has a fixed bold 5x5 pixel red X badge.
+
+Clawd is the Claude Code mascot and a character of Anthropic. This is an
+original unofficial pixel rendition, not affiliated with or endorsed by
+Anthropic. These licenses cover the drawing/code contributions only; they grant
+no rights in the Clawd character or Anthropic trademarks.
+
+Offline PNG derivatives exported by Scripts/export_character_frames.cjs from the local menu-bar adapter.
+72x44 pixels are 2x resolution for the existing 36x22pt viewport, not historical runner frames.
+15 FPS, seeded RNG, fixed 60Hz JS integration; CSS sampled at fixed times. All loops start at phase zero on the shared 4-second main beat.
+Playback durations and optional intro-to-loop boundaries are declared by this source adapter export.json and copied into manifest.json.
+The original scripts above remain development inputs only; no browser runtime is needed to play these PNGs.

@@ -1,0 +1,40 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; frame-src about:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:transparent}iframe{border:0;width:36px;height:22px;pointer-events:none}</style>
+<iframe id="pet" sandbox="allow-scripts allow-same-origin" title="Codex ChatGPT"></iframe>
+<script>
+'use strict';
+/* CHATGPT_ASSETS */
+const files = {'02':'chatgpt-idle','30':'chatgpt-thinking','32':'chatgpt-typing','35':'chatgpt-waiting','33':'chatgpt-mini-happy','34':'chatgpt-error','11':'chatgpt-unknown'};
+let currentState = null;
+let reducedMotion = null;
+function setBallState(id, reduced) {
+    if (!files[id]) return false;
+    if (currentState === id && reducedMotion === reduced) return true;
+    currentState = id;
+    reducedMotion = reduced;
+    let scripts = '';
+    let svg = assets[files[id]].replace(/<script[^>]*>([\s\S]*?)<\/script>/g, (_, code) => {
+        scripts += '<script>' + code.replaceAll('<![CDATA[', '').replaceAll(']]>', '') + '</scr' + 'ipt>';
+        return '';
+    }).replaceAll('<![CDATA[', '').replaceAll(']]>', '');
+    // Match the 22pt Grok character by fitting the cloud body rather than the desktop artboard.
+    svg = svg.replace(/viewBox="[^"]*"/, 'viewBox="0.5 1.5 23 21"');
+    const menuStyle = `<style>
+        html,body{margin:0;overflow:hidden;background:transparent}
+        svg{display:block;width:26px;height:22px}
+    </style>`;
+    const duration = id === '33' ? 2200 : 0;
+    const control = `window.runtimeErrors = []; window.addEventListener('error', event => runtimeErrors.push(event.message));
+        const originalRAF = window.requestAnimationFrame.bind(window);
+        let stopped = false;
+        window.requestAnimationFrame = callback => stopped ? 0 : originalRAF(time => { if (!stopped) callback(time); });
+        window.addEventListener('load', () => {
+            originalRAF(() => originalRAF(() => { if (${reduced}) stopped = true; }));
+            if (${duration} > 0) setTimeout(() => stopped = true, ${duration});
+        });`;
+    document.getElementById('pet').srcdoc = '<!doctype html><style>html,body{margin:0;overflow:hidden;background:transparent}svg{display:block;width:36px;height:22px}</style><script>' + control + '</scr' + 'ipt>' + svg + menuStyle + scripts;
+    return true;
+}
+</script>

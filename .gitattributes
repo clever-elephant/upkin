@@ -1,0 +1,8 @@
+# Source archives omit personal evidence and unused legacy artwork.
+.codex export-ignore
+.codex-qa export-ignore
+Resources/Runners export-ignore
+docs/references export-ignore
+design-qa.md export-ignore
+*.app export-ignore
+output export-ignore

@@ -1,0 +1,6 @@
+Provider brand icons: OpenAI, Claude, Grok.
+Source: @lobehub/icons-static-png 2.2.0 (light/openai.png, light/claude-color.png, light/grok.png)
+https://www.npmjs.com/package/@lobehub/icons-static-png/v/2.2.0
+https://github.com/lobehub/icons
+Upstream license: MIT, see LICENSE. Brand names and marks belong to their respective owners.
+PNG assets are bundled locally; no runtime downloads or icon dependency.

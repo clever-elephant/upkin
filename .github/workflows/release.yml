@@ -1,0 +1,28 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo xcode-select --switch /Applications/Xcode_16.4.app/Contents/Developer
+      - run: swift run UpkinCoreTests
+      - run: bash Scripts/test_rpc.sh
+      - run: python3 Scripts/test_agent_activity.py
+      - run: python3 Scripts/test_project_metadata.py
+      - run: UPKIN_RELEASE_TAG="$GITHUB_REF_NAME" ./Scripts/package_release.sh
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          # Release notes are the CHANGELOG section for this version.
+          awk -v v="$version" '$0 ~ "^## \\[?" v "\\]?" {on=1; next} /^## / {on=0} on' CHANGELOG.md > notes.md
+          test -s notes.md
+          gh release create "$GITHUB_REF_NAME" dist/Upkin-"$version"-macos.zip dist/Upkin-"$version"-macos.zip.sha256 \
+            --title "Upkin $version" --notes-file notes.md --verify-tag

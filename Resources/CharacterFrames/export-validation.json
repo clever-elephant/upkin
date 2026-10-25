@@ -1,0 +1,86 @@
+{
+  "grok/02": {
+    "frames": 60,
+    "uniqueFrames": 56
+  },
+  "grok/30": {
+    "frames": 120,
+    "uniqueFrames": 120
+  },
+  "grok/32": {
+    "frames": 120,
+    "uniqueFrames": 118
+  },
+  "grok/35": {
+    "frames": 60,
+    "uniqueFrames": 44
+  },
+  "grok/33": {
+    "frames": 33,
+    "uniqueFrames": 33
+  },
+  "grok/34": {
+    "frames": 15,
+    "uniqueFrames": 15
+  },
+  "grok/11": {
+    "frames": 60,
+    "uniqueFrames": 53
+  },
+  "clawd/02": {
+    "frames": 60,
+    "uniqueFrames": 57
+  },
+  "clawd/30": {
+    "frames": 120,
+    "uniqueFrames": 120
+  },
+  "clawd/32": {
+    "frames": 60,
+    "uniqueFrames": 60
+  },
+  "clawd/35": {
+    "frames": 60,
+    "uniqueFrames": 57
+  },
+  "clawd/33": {
+    "frames": 33,
+    "uniqueFrames": 23
+  },
+  "clawd/34": {
+    "frames": 75,
+    "uniqueFrames": 57
+  },
+  "clawd/11": {
+    "frames": 60,
+    "uniqueFrames": 60
+  },
+  "chatgpt/11": {
+    "frames": 60,
+    "uniqueFrames": 33
+  },
+  "chatgpt/30": {
+    "frames": 120,
+    "uniqueFrames": 66
+  },
+  "chatgpt/32": {
+    "frames": 120,
+    "uniqueFrames": 120
+  },
+  "chatgpt/33": {
+    "frames": 33,
+    "uniqueFrames": 26
+  },
+  "chatgpt/34": {
+    "frames": 75,
+    "uniqueFrames": 56
+  },
+  "chatgpt/35": {
+    "frames": 60,
+    "uniqueFrames": 60
+  },
+  "chatgpt/02": {
+    "frames": 60,
+    "uniqueFrames": 45
+  }
+}

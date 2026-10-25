@@ -1,0 +1,46 @@
+{
+  "id": "grok",
+  "sourceHTML": "index.html",
+  "attributionDirectory": "../../ThirdParty/GrokBall",
+  "runtime": {
+    "marker": "/* GROK_BALL_RUNTIME */",
+    "file": "../../ThirdParty/GrokBall/grok-ball.js"
+  },
+  "states": {
+    "02": {
+      "seconds": 4,
+      "loop": true,
+      "staticFrame": 0
+    },
+    "30": {
+      "seconds": 8,
+      "loop": true,
+      "staticFrame": 0
+    },
+    "32": {
+      "seconds": 8,
+      "loop": true,
+      "staticFrame": 0
+    },
+    "35": {
+      "seconds": 4,
+      "loop": true,
+      "staticFrame": 0
+    },
+    "33": {
+      "seconds": 2.2,
+      "loop": false,
+      "staticFrame": 32
+    },
+    "34": {
+      "seconds": 1,
+      "loop": false,
+      "staticFrame": 14
+    },
+    "11": {
+      "seconds": 4,
+      "loop": true,
+      "staticFrame": 0
+    }
+  }
+}

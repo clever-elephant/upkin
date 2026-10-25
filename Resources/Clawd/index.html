@@ -1,0 +1,218 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+svg { position: absolute; left: 0; top: 0; width: 36px; height: 22px; }
+/* Clawd: proportions adapted from abderrahimghazali/clawd-pet (MIT); original Upkin animation. One unit = 1.5pt (3 device pixels at 2x); everything stays inside the 32pt character region. */
+.b { fill: #DE886D; }
+.e { fill: #000000; }
+.acc, .pose, .face { opacity: 0; }
+* { animation-timing-function: steps(1, end) !important; animation-fill-mode: forwards; }
+
+#crab, .pose, .leg { animation-timing-function: linear !important; }
+[data-s="33"] :is(#crab, .pose, .leg), [data-s="34"] :is(#crab, .pose, .leg) { animation-timing-function: ease-in-out !important; }
+#crab { transform-origin: 8.5px 12px; }
+[data-s="30"] #armR-down .claw-shade { opacity: 1; }
+.claw-shade { fill: #BF6D56; opacity: 0; }
+.math { fill: #BF6D56; opacity: 0; }
+/* Default poses */
+[data-s] #armL-down, [data-s] #armR-down, [data-s] #eyes-open { opacity: 1; }
+
+/* One complete gesture per 4s beat. */
+[data-s="02"] #crab { animation: idle-stretch 4s infinite; }
+[data-s="02"] #armL-down { animation: stretch-l 4s infinite; }
+[data-s="02"] #armR-down { animation: stretch-r 4s infinite; }
+[data-s="02"] #eyes-open { animation: blink-open 4s infinite; }
+[data-s="02"] #eyes-closed { animation: blink-closed 4s infinite; }
+
+/* A full lean, chin scratch and return; gaze holds for each left/right round. */
+[data-s="30"] #crab { animation: ponder 8s infinite; }
+[data-s="30"] #armR-down { animation: chin-scratch 4s infinite; }
+[data-s="30"] #eyes-open { animation: gaze 8s infinite; }
+[data-s="30"] #dot1 { animation: thought 4s infinite; }
+[data-s="30"] #dot2 { animation: thought2 4s infinite; }
+[data-s="30"] #dot3 { animation: thought3 4s infinite; }
+
+/* Gentle breathing and one upper-right operator per second; the face stays fixed. */
+[data-s="32"] #crab { animation: working-breathe 4s linear infinite; }
+[data-s="32"] #math-plus { animation: math-plus 4s steps(1, end) infinite; }
+[data-s="32"] #math-minus { animation: math-minus 4s steps(1, end) infinite; }
+[data-s="32"] #math-multiply { animation: math-multiply 4s steps(1, end) infinite; }
+[data-s="32"] #math-divide { animation: math-divide 4s steps(1, end) infinite; }
+
+/* Same 2x2 claw as the base pose: lift near the shoulder, never stretch into a horn. */
+[data-s="35"] #armR-down { opacity: 0; }
+[data-s="35"] #armR-up { opacity: 1; animation: beckon 4s infinite; }
+[data-s="35"] #crab { animation: patient 4s infinite; }
+[data-s="35"] #bang { opacity: 1; }
+
+/* Tilt, inspect, straighten; no rapid eye-symbol cycling. */
+[data-s="11"] #eyes-open { opacity: 0; }
+[data-s="11"] #eyes-unsure { opacity: 1; }
+[data-s="11"] #crab { animation: inspect 4s infinite; }
+[data-s="11"] #armL-down { animation: inspect-claw 4s infinite; }
+[data-s="11"] #ask { opacity: 1; animation: question 4s infinite; }
+
+/* Rise proudly with two short side claws; the rectangular torso stays unchanged. */
+[data-s="33"] #crab { animation: proud 2.2s 1 forwards; }
+[data-s="33"] #armL-down, [data-s="33"] #armR-down,
+[data-s="33"] #eyes-open { animation: off-after-rise 2.2s 1 forwards; }
+[data-s="33"] #armL-up { animation: flourish-l 2.2s 1 forwards; }
+[data-s="33"] #armR-up { animation: flourish-r 2.2s 1 forwards; }
+[data-s="33"] #eyes-happy { animation: on-after-rise 2.2s 1 forwards; }
+[data-s="33"] #spark1 { animation: spark1 2.2s 1 forwards; }
+[data-s="33"] #spark2 { animation: spark2 2.2s 1 forwards; }
+
+/* One recoil, then folded claws, a quiet 4s sigh and a fixed red X badge. */
+[data-s="34"] #eyes-open { opacity: 0; }
+[data-s="34"] #eyes-focus { opacity: 1; }
+[data-s="34"] #crab { animation: recoil 1s 1 forwards, sigh 4s 1s infinite; }
+[data-s="34"] #armL-down { transform: translate(2px, 1px); }
+[data-s="34"] #armR-down { transform: translate(-2px, 1px); }
+[data-s="34"] #error-mark { opacity: 1; }
+
+@keyframes idle-stretch {
+  0%, 100% { transform: translateY(0); }
+  15% { transform: translateY(1px); } 30% { transform: translateY(0); }
+  40% { transform: translateY(-1px); } 55% { transform: translateY(0); }
+  70% { transform: translateY(1px); } 
+}
+@keyframes stretch-l {
+  0%, 100% { transform: translate(0, 0); } 15% { transform: translate(-1px, 0); }
+  30% { transform: translate(-1px, -1px); } 40% { transform: translate(-1px, -2px); }
+  55% { transform: translate(-1px, -1px); } 70% { transform: translate(0, 0); }
+}
+@keyframes stretch-r {
+  0%, 100% { transform: translate(0, 0); } 15% { transform: translate(1px, 0); }
+  30% { transform: translate(1px, -1px); } 40% { transform: translate(1px, -2px); }
+  55% { transform: translate(1px, -1px); } 70% { transform: translate(0, 0); }
+}
+@keyframes blink-open { 0%, 85%, 100% { opacity: 1; } 80% { opacity: 0; } }
+@keyframes blink-closed { 0%, 85%, 100% { opacity: 0; } 80% { opacity: 1; } }
+@keyframes ponder {
+  0%, 50%, 100% { transform: translate(0, 0); }
+  10% { transform: rotate(2deg); } 20% { transform: rotate(3deg) translateY(-0.5px); }
+  35% { transform: translate(0, -1px); } 
+  60% { transform: rotate(-2deg); } 70% { transform: rotate(-3deg) translateY(-0.5px); }
+  85% { transform: translate(0, -1px); } 
+}
+@keyframes chin-scratch {
+  0%, 100% { transform: translate(0, 0); } 10% { transform: translate(0, 1px); }
+  20% { transform: translate(-1px, 2px); } 35% { transform: translate(-2px, 2px); }
+  50% { transform: translate(-1px, 2px); } 70% { transform: translate(-1px, 1px); }
+  85% { transform: translate(0, 0); }
+}
+@keyframes gaze { 0%, 100% { transform: translate(1px, 0); } 50% { transform: translate(-1px, 0); } }
+@keyframes thought { 0%, 90%, 100% { opacity: 0; } 25% { opacity: 1; } }
+@keyframes thought2 { 0%, 90%, 100% { opacity: 0; } 35% { opacity: 1; } }
+@keyframes thought3 { 0%, 90%, 100% { opacity: 0; } 45% { opacity: 1; } }
+@keyframes beckon {
+  0%, 100% { transform: translate(0, 0); } 10% { transform: translate(0, -0.5px); }
+  20% { transform: translate(1px, -1px); } 30% { transform: translate(1px, 0); }
+  40% { transform: translate(0, -0.5px); } 50% { transform: translate(0, -1px); }
+  65% { transform: translate(0, 0); }
+}
+@keyframes patient {
+  0%, 100% { transform: translateY(0); } 20% { transform: translateY(-1px); }
+  40% { transform: translateY(0); } 70% { transform: translateY(1px); }
+  
+}
+@keyframes inspect {
+  0%, 100% { transform: translate(0, 0); } 15% { transform: translate(-1px, 0); }
+  30% { transform: translate(-1px, 1px); } 45% { transform: translate(0, 1px); }
+  60% { transform: translate(1px, 0); } 75% { transform: translate(1px, -1px); }
+  
+}
+@keyframes inspect-claw {
+  0%, 100% { transform: translate(0, 0); } 30% { transform: translate(0, -1px); }
+  60% { transform: translate(0, -2px); } 75% { transform: translate(0, -1px); }
+  90% { transform: translate(0, 0); }
+}
+@keyframes question { 0%, 100% { transform: translateY(0); } 30% { transform: translateY(1px); } 60% { transform: translateY(0); } }
+@keyframes proud {
+  0% { transform: translateY(1px); } 12.12% { transform: translateY(0); }
+  24.24% { transform: translateY(-1px); } 48.48% { transform: translateY(0); }
+  100% { transform: translateY(0); }
+}
+@keyframes off-after-rise { 0% { opacity: 1; } 24.24%, 100% { opacity: 0; } }
+@keyframes on-after-rise { 0% { opacity: 0; } 24.24%, 100% { opacity: 1; } }
+@keyframes flourish-l {
+  0% { opacity: 0; } 24.24% { opacity: 1; transform: translate(0, 1px); }
+  36.36% { opacity: 1; transform: translate(0, 0); }
+  60.6%, 100% { opacity: 1; transform: translate(0, 0); }
+}
+@keyframes flourish-r {
+  0% { opacity: 0; } 24.24% { opacity: 1; transform: translate(0, 1px); }
+  36.36% { opacity: 1; transform: translate(1px, 0); }
+  60.6%, 100% { opacity: 1; transform: translate(0, 0); }
+}
+@keyframes spark1 { 0%, 72.72%, 100% { opacity: 0; } 36.36% { opacity: 1; } }
+@keyframes spark2 { 0%, 84.84%, 100% { opacity: 0; } 48.48% { opacity: 1; } }
+@keyframes recoil {
+  0% { transform: translate(0, 0); } 13.33% { transform: translate(-1px, 0); }
+  26.66% { transform: translate(1px, 0); } 40% { transform: translate(-1px, 1px); }
+  60% { transform: translate(0, 1px); } 100% { transform: translate(0, 1px); }
+}
+@keyframes sigh {
+  0%, 100% { transform: translate(0, 1px); } 20% { transform: translate(0, 2px); }
+  40% { transform: translate(1px, 2px); } 60% { transform: translate(1px, 1px); }
+  80% { transform: translate(0, 1px); }
+}
+@keyframes working-breathe { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-0.5px); } }
+@keyframes math-plus { 0% {opacity:1;} 25%,100% {opacity:0;} }
+@keyframes math-minus { 0% {opacity:0;} 25% {opacity:1;} 50%,100% {opacity:0;} }
+@keyframes math-multiply { 0% {opacity:0;} 50% {opacity:1;} 75%,100% {opacity:0;} }
+@keyframes math-divide { 0% {opacity:0;} 75% {opacity:1;} 100% {opacity:0;} }
+</style>
+</head>
+<body>
+<svg viewBox="0 0 24 14.6667" shape-rendering="crispEdges" aria-hidden="true">
+  <g id="crab">
+    <rect id="torso" class="b" x="3" y="3" width="11" height="7"/>
+    <g class="leg leg-a"><rect class="b" x="4" y="10" width="1" height="2"/><rect class="b" x="12" y="10" width="1" height="2"/></g>
+    <g class="leg leg-b"><rect class="b" x="6" y="10" width="1" height="2"/><rect class="b" x="10" y="10" width="1" height="2"/></g>
+    <g id="armL-down" class="pose"><rect class="b" x="1" y="6" width="2" height="2"/></g>
+    <g id="armR-down" class="pose"><rect class="b" x="14" y="6" width="2" height="2"/><rect class="claw-shade" x="14" y="7" width="2" height="1"/></g>
+    <g id="armL-up" class="pose"><rect class="b" x="1" y="4" width="2" height="2"/></g>
+    <g id="armR-up" class="pose"><rect class="b" x="14" y="4" width="2" height="2"/></g>
+    <g id="eyes-open" class="face"><rect class="e" x="5" y="5" width="1" height="2"/><rect class="e" x="11" y="5" width="1" height="2"/></g>
+    <g id="eyes-closed" class="face"><rect class="e" x="5" y="6" width="1" height="1"/><rect class="e" x="11" y="6" width="1" height="1"/></g>
+    <g id="eyes-focus" class="face"><rect class="e" x="4" y="6" width="2" height="1"/><rect class="e" x="10" y="6" width="2" height="1"/></g>
+    <g id="eyes-unsure" class="face"><rect class="e" x="5" y="5" width="1" height="2"/><rect class="e" x="11" y="6" width="1" height="1"/></g>
+    <g id="eyes-happy" class="face">
+      <rect class="e" x="4" y="6" width="1" height="1"/><rect class="e" x="5" y="5" width="1" height="1"/><rect class="e" x="6" y="6" width="1" height="1"/>
+      <rect class="e" x="10" y="6" width="1" height="1"/><rect class="e" x="11" y="5" width="1" height="1"/><rect class="e" x="12" y="6" width="1" height="1"/>
+    </g>
+
+  </g>
+  <g id="error-mark" class="acc" fill="#C94F43">
+    <rect x="16" y="0" width="2" height="2"/><rect x="19" y="0" width="2" height="2"/>
+    <rect x="17" y="1" width="3" height="3"/>
+    <rect x="16" y="3" width="2" height="2"/><rect x="19" y="3" width="2" height="2"/>
+  </g>
+  <rect id="dot1" class="acc" x="16" y="3" width="1" height="1" fill="#9AA2AD"/>
+  <rect id="dot2" class="acc" x="17" y="1" width="1" height="1" fill="#9AA2AD"/>
+  <rect id="dot3" class="acc" x="19" y="0" width="2" height="2" fill="#9AA2AD"/>
+  <g id="bang" class="acc" fill="#F59E0B"><rect x="20" y="0" width="1" height="3"/><rect x="20" y="4" width="1" height="1"/></g>
+  <g id="ask" class="acc" fill="#7C8DA6">
+    <rect x="18" y="0" width="3" height="1"/><rect x="18" y="1" width="1" height="1"/><rect x="20" y="1" width="1" height="1"/><rect x="19" y="2" width="1" height="2"/><rect x="19" y="5" width="1" height="1"/>
+  </g>
+  <g id="spark1" class="acc" fill="#FBBF24"><rect x="19" y="1" width="1" height="3"/><rect x="18" y="2" width="3" height="1"/></g>
+  <g id="spark2" class="acc" fill="#FBBF24"><rect x="1" y="9" width="1" height="3"/><rect x="0" y="10" width="3" height="1"/><rect x="18" y="7" width="1" height="1"/></g>
+<g id="math-plus" class="math"><path d="M18 0h1v2h2v1h-2v2h-1V3h-2V2h2z"/></g>
+<g id="math-minus" class="math"><path d="M16 2h5v1h-5z"/></g>
+<g id="math-multiply" class="math"><path d="M16 0h1v1h-1z M20 0h1v1h-1z M17 1h1v1h-1z M19 1h1v1h-1z M18 2h1v1h-1z M17 3h1v1h-1z M19 3h1v1h-1z M16 4h1v1h-1z M20 4h1v1h-1z"/></g>
+<g id="math-divide" class="math"><path d="M18 0h1v1h-1z M16 2h5v1h-5z M18 4h1v1h-1z"/></g></svg>
+<script>
+'use strict';
+const allowedStates = ['02', '30', '32', '35', '33', '34', '11'];
+function setBallState(id, reduced, duration = 0) {
+    if (!allowedStates.includes(id)) return;
+    document.body.dataset.s = id;
+}
+</script>
+</body>
+</html>

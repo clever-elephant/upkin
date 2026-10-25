@@ -1,0 +1,4 @@
+interface:
+  display_name: "菜单栏角色设计与制作"
+  short_description: "设计可复用的轻量角色动作与稳定表情，并验证完整循环接缝和资源开销"
+  default_prompt: "使用 $menu-bar-character 为当前项目设计并实现一个动作连贯、表情稳定的菜单栏角色。"

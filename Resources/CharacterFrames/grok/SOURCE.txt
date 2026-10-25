@@ -1,0 +1,14 @@
+Grok Ball — https://github.com/TyCoding/grok-ball
+Revision: de368ce3acdc5a70e871ee46ebbe8f60b11d3d6a
+Original JS runtime retained verbatim; copyright (c) 2026 tycoding, MIT.
+The original SVG engine is retained for offline browser-based export only;
+the app plays PNG frames natively, without WebKit.
+The menu-bar adapter exposes seven task states at default eye scale.
+Grok/xAI names and marks remain with their respective owners; no affiliation implied.
+
+Offline PNG derivatives exported by Scripts/export_character_frames.cjs from the local menu-bar adapter.
+72x44 pixels are 2x resolution for the existing 36x22pt viewport, not historical runner frames.
+15 FPS, seeded RNG, fixed 60Hz JS integration; CSS sampled at fixed times. All loops start at phase zero on the shared 4-second main beat.
+Bounded loops replace continuous random/mouse-follow behavior; completion plays
+once for 2.2 seconds and error once for 1 second.
+The original scripts above remain development inputs only; no browser runtime is needed to play these PNGs.

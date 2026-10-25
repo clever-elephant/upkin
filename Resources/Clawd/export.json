@@ -1,0 +1,14 @@
+{
+  "id": "clawd",
+  "sourceHTML": "index.html",
+  "attributionDirectory": ".",
+  "states": {
+    "02": { "seconds": 4, "loop": true, "staticFrame": 0 },
+    "30": { "seconds": 8, "loop": true, "staticFrame": 30 },
+    "32": { "seconds": 4, "loop": true, "staticFrame": 30 },
+    "35": { "seconds": 4, "loop": true, "staticFrame": 0 },
+    "33": { "seconds": 2.2, "loop": false, "staticFrame": 32 },
+    "34": { "seconds": 5, "loop": true, "staticFrame": 15, "loopStartFrame": 15 },
+    "11": { "seconds": 4, "loop": true, "staticFrame": 0 }
+  }
+}

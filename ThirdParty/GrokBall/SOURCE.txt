@@ -1,0 +1,7 @@
+Grok Ball — https://github.com/TyCoding/grok-ball
+Revision: de368ce3acdc5a70e871ee46ebbe8f60b11d3d6a
+Original JS runtime retained verbatim; copyright (c) 2026 tycoding, MIT.
+The original SVG engine is retained for offline browser-based export only;
+the app plays PNG frames natively, without WebKit.
+The menu-bar adapter exposes seven task states at default eye scale.
+Grok/xAI names and marks remain with their respective owners; no affiliation implied.

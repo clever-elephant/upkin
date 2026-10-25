@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "width": 72,
+  "height": 44,
+  "states": {
+    "11": {
+      "frames": 60,
+      "fps": 15,
+      "loop": true,
+      "staticFrame": 0
+    },
+    "30": {
+      "frames": 120,
+      "fps": 15,
+      "loop": true,
+      "staticFrame": 0
+    },
+    "32": {
+      "frames": 120,
+      "fps": 15,
+      "loop": true,
+      "staticFrame": 0
+    },
+    "33": {
+      "frames": 33,
+      "fps": 15,
+      "loop": false,
+      "staticFrame": 32
+    },
+    "34": {
+      "frames": 15,
+      "fps": 15,
+      "loop": false,
+      "staticFrame": 14
+    },
+    "35": {
+      "frames": 60,
+      "fps": 15,
+      "loop": true,
+      "staticFrame": 0
+    },
+    "02": {
+      "frames": 60,
+      "fps": 15,
+      "loop": true,
+      "staticFrame": 0
+    }
+  },
+  "name": "Grok",
+  "defaultFor": [
+    "grok"
+  ],
+  "sortOrder": 0
+}

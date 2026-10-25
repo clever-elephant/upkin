@@ -1,0 +1,5 @@
+ChatGPT character (Codex)
+Drawn by clever-elephant. License: AGPL-3.0 (see LICENSE).
+The cloud outline is adapted from the OpenAI Codex logo; OpenAI marks belong to OpenAI.
+Editable SVG/HTML animation sources: Resources/ChatGPT/.
+Seven task states; transparent 72x44 PNG frames at 15 FPS.

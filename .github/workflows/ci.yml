@@ -1,0 +1,23 @@
+name: Checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo xcode-select --switch /Applications/Xcode_16.4.app/Contents/Developer
+      - run: swift --version
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: swift build
+      - run: swift run UpkinCoreTests
+      - run: bash Scripts/test_rpc.sh
+      - run: python3 Scripts/test_agent_activity.py
+      - run: python3 Scripts/test_project_metadata.py
+      - run: node Scripts/test_character_export_config.cjs
+      - run: swift Scripts/test_character_frames.swift
+      - run: ./Scripts/build_app.sh

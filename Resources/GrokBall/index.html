@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<style>
+html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: transparent; }
+body { display: flex; align-items: center; justify-content: center; }
+#ball { width: 22px; height: 22px; flex: none; margin-right: 10px; }
+</style>
+</head>
+<body>
+<div id="ball"></div>
+<script>/* GROK_BALL_RUNTIME */</script>
+<script>
+'use strict';
+const allowedStates = ['02', '30', '32', '35', '33', '34', '11'];
+const ball = GrokBall.create('#ball', { emotion: '02', autostart: false, lite: false });
+// Local menu-bar cadence; upstream artwork/runtime and its registry stay unchanged.
+// 4s is one full sway/breath. Thinking/working alternate two original eye-ring pairs
+// across two cycles (8s/120frames at15FPS); other loops hold their initial face.
+const menuCycles = {'02':[0], '30':[8,16], '32':[7,16], '35':[10], '11':[14]};
+let cycleStart = 0;
+let cycleNumber = 0;
+let breath = 0;
+let orbit = null;
+function prepareMenuCycle(id) {
+    const definition = ball._def;
+    breath = definition.base.body.breathe || 0;
+    // Disable only independent facial/random schedules, not the animation ticker.
+    ball._def = {...definition, gaze:false, antics:false, blinkMs:null, anims:[],
+        base:{...definition.base, body:{...definition.base.body, breathe:0, orbit:0}}};
+    ball._poolNext = ball._blinkNext = ball._anticNext = Infinity;
+    ball._blinkQ = [];
+    ball._open.x = ball._open.t = 1;
+    ball._open.v = 0;
+    ball._spin = null;
+    ball._bounceAt = -1;
+    ball._transDur = 0;
+    cycleStart = performance.now();
+    cycleNumber = 0;
+    ball._setExpr(menuCycles[id][0]);
+    settleMenuFace();
+}
+function settleMenuFace() {
+    ball._ringSpring.x = ball._ringSpring.t = 1;
+    ball._ringSpring.v = 0;
+    ball._ringCur = ball._ringDst;
+}
+function menuPhase(now) {
+    // Quantize sub-nanosecond clock noise before SVG rounding at repeated loop seams.
+    const local = Math.round(((now - cycleStart) % 4000) * 1e6) / 1e6;
+    return Math.PI * 2 * local / 4000;
+}
+const compose = ball._compose;
+ball._compose = function(now, depth) {
+    const faces = menuCycles[this.emotionId];
+    if (!faces) return compose.call(this, now, depth);
+    const elapsed = Math.max(0, now - cycleStart);
+    const cycle = Math.floor((elapsed + 1e-7) / 4000);
+    if (cycle !== cycleNumber) {
+        cycleNumber = cycle;
+        this._setExpr(faces[cycle % faces.length]);
+        settleMenuFace();
+    }
+    const pose = compose.call(this, now, depth);
+    const phase = menuPhase(now);
+    pose.body.scale += breath * Math.sin(phase);
+    pose.body.y += breath * 55 * Math.sin(phase + .6);
+    pose.body.rotate += (this.emotionId === '35' ? .5 : 1.5) * Math.sin(phase);
+    return pose;
+};
+// One bounded version of the original slim rainbow orbit, with front/back occlusion.
+// Original random particle trajectories have no finite common repeat period.
+function drawMenuOrbit(now) {
+    if (ball.emotionId !== '30') { if (orbit) orbit.forEach(path => path.style.display = 'none'); return; }
+    const svg = ball.ball.svg;
+    if (!orbit) {
+        const ns = 'http://www.w3.org/2000/svg';
+        const gradient = document.createElementNS(ns, 'linearGradient');
+        gradient.id = 'menu-orbit-color';
+        gradient.innerHTML = '<stop stop-color="#7e8ef2"/><stop offset=".5" stop-color="#bf83d9"/><stop offset="1" stop-color="#85bda3"/>';
+        svg.querySelector('defs').append(gradient);
+        const body = svg.querySelector(':scope > g:not([pointer-events])');
+        orbit = [0,1].map(front => {
+            const path = document.createElementNS(ns, 'path');
+            path.setAttribute('fill','none'); path.setAttribute('stroke','url(#menu-orbit-color)');
+            path.setAttribute('stroke-width','6'); path.setAttribute('stroke-linecap','round');
+            if (front) body.after(path); else body.before(path);
+            return path;
+        });
+    }
+    const phase = menuPhase(now);
+    const paths = ['', '']; let previous = -1;
+    for (let point = 0; point <= 48; point++) {
+        const angle = phase - 2.8 + point * 2.8 / 48;
+        const front = Math.cos(angle) >= 0 ? 1 : 0;
+        paths[front] += (front === previous ? ' L' : ' M') +
+            (114.27 + 130 * Math.sin(angle)).toFixed(2) + ' ' + (114.27 - 22 * Math.cos(angle)).toFixed(2);
+        previous = front;
+    }
+    orbit.forEach((path, index) => { path.style.display = ''; path.setAttribute('d', paths[index]); });
+}
+const applyPose = ball.ball.applyPose;
+ball.ball.applyPose = function(pose) { applyPose(pose); drawMenuOrbit(performance.now()); };
+let currentState = null;
+let reducedMotion = null;
+let settleTimer = null;
+function setBallState(id, reduced, duration = 0) {
+    if (!allowedStates.includes(id)) return false;
+    if (currentState === id && reducedMotion === reduced) return true;
+    clearTimeout(settleTimer);
+    settleTimer = null;
+    ball.setActive(!reduced);
+    if (currentState !== id) {
+        ball.setEmotion(id);
+        if (menuCycles[id]) prepareMenuCycle(id);
+        currentState = id;
+    }
+    reducedMotion = reduced;
+    if (reduced) ball.renderStatic();
+    else if (duration > 0 && duration <= 5) {
+        // Stop on the rendered final pose, not renderStatic() which would reset the entry sequence.
+        settleTimer = setTimeout(() => ball.setActive(false), duration * 1000);
+    }
+    return true;
+}
+</script>
+</body>
+</html>
