@@ -44,7 +44,7 @@
 <summary><strong>从源码构建</strong></summary>
 <br/>
 
-需要 Swift 6（Xcode 16 或 Command Line Tools 自带）。
+需要 Xcode 26 或对应的 Command Line Tools（已验证 Swift 6.3；Xcode 16 的 SDK 无法编译）。
 
 ```bash
 git clone https://github.com/clever-elephant/upkin.git

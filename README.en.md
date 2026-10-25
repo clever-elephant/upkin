@@ -44,7 +44,7 @@ Upkin lives only in the menu bar, with no Dock icon; settings are behind the gea
 <summary><strong>Build from source</strong></summary>
 <br/>
 
-Requires Swift 6 (comes with Xcode 16 or the Command Line Tools).
+Requires Xcode 26 or its Command Line Tools (verified with Swift 6.3; Xcode 16's SDK won't compile it).
 
 ```bash
 git clone https://github.com/clever-elephant/upkin.git

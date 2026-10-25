@@ -2,7 +2,7 @@
 
 ## 构建与启动
 
-需要 **macOS 14+、Swift 6+**（可通过兼容的 Xcode 安装）。先安装并登录要使用的 AI CLI；无需同时使用全部三种工具。Codex 额度通过已用 ChatGPT 账号登录的 `codex` CLI 查询，优先查找 PATH、`~/.local/bin` 及常见安装目录，其次查找 `/Applications` 或 `~/Applications` 中 Codex / ChatGPT 桌面应用内置的 CLI。活动 hooks 另需本机 Python 3；iTerm 会话跳转需 iTerm 和系统自动化许可。
+运行需要 **macOS 14+**；从源码构建需要 **Xcode 26 或对应的 Command Line Tools**（已验证 Swift 6.3）。先安装并登录要使用的 AI CLI；无需同时使用全部三种工具。Codex 额度通过已用 ChatGPT 账号登录的 `codex` CLI 查询，优先查找 PATH、`~/.local/bin` 及常见安装目录，其次查找 `/Applications` 或 `~/Applications` 中 Codex / ChatGPT 桌面应用内置的 CLI。活动 hooks 另需本机 Python 3；iTerm 会话跳转需 iTerm 和系统自动化许可。
 
 ```bash
 swift build

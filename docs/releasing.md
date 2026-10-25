@@ -45,6 +45,6 @@ file Upkin.app/Contents/MacOS/Upkin
 
 ## 当前支持边界
 
-macOS 14+、Swift 6+；iTerm 跳转需系统自动化许可；活动 hooks 需 Python 3，默认不安装。当前没有自动更新、遥测或正式公证发布流程。
+运行需 macOS 14+，构建需 Xcode 26（Swift 6.3 已验证）；iTerm 跳转需系统自动化许可；活动 hooks 需 Python 3，默认不安装。当前没有自动更新、遥测或正式公证发布流程。
 
 Apple Silicon 保留其他显示器的角色静态回退；Intel 的非活动显示器可能只显示额度，见 [架构说明](architecture.md)。未验证的平台或环境不记为通过。
