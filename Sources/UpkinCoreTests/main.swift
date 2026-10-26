@@ -112,6 +112,19 @@ func rejectsQuotaWindowsWithoutDuration() throws {
     }
 }
 
+func selectsAvailableQuota() {
+    for (short, weekly, expected) in [(10, 80, 10), (80, 10, 10), (0, 80, 0), (100, 100, 100),
+                                      (25, nil, 25), (nil, 40, 40), (nil, nil, nil)] as [(Int?, Int?, Int?)] {
+        let snapshot = CodexUsageSnapshot(
+            fiveHour: short.map { UsageWindow(usedPercent: Double(100 - $0), windowMinutes: 300, resetsAt: nil) },
+            weekly: weekly.map { UsageWindow(usedPercent: Double(100 - $0), windowMinutes: 10_080, resetsAt: nil) },
+            planType: nil, fetchedAt: Date())
+        expect(snapshot.availablePercent == expected, "Available quota uses the lowest remaining window, including partial/missing data")
+        expect(snapshot.accessibilitySummary == (expected.map { "Codex usage: \($0)% available" } ?? "Codex usage unavailable"),
+               "Accessibility describes the same available quota as the menu bar")
+    }
+}
+
 func clampsPercentages() {
     let over = UsageWindow(usedPercent: 130, windowMinutes: 300, resetsAt: nil)
     let under = UsageWindow(usedPercent: -10, windowMinutes: 300, resetsAt: nil)
@@ -1636,6 +1649,7 @@ do {
     try decodesRateLimitWindowsByDuration()
     try classifiesSingleWeeklyRateLimitWindow()
     try rejectsQuotaWindowsWithoutDuration()
+    selectsAvailableQuota()
     clampsPercentages()
     formatsResetTextInEnglish()
     locatesCodexExecutables()

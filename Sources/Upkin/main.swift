@@ -358,7 +358,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func updateMenuBarImage() {
         guard let button = self.statusItem.button else { return }
         let frame = self.characterView.currentImage ?? self.runnerImage
-        let percent = self.snapshot?.weekly?.roundedRemainingPercent
+        let percent = self.snapshot?.availablePercent
         let scale = button.window?.backingScaleFactor ?? 2
         let key = "\(self.menuBarAnimationKey):\(percent ?? -1):\(button.effectiveAppearance.name.rawValue):\(scale)"
         if self.menuBarRenderKey != key {

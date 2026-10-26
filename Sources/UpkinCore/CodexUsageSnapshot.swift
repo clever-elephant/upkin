@@ -59,8 +59,12 @@ public struct CodexUsageSnapshot: Equatable, Sendable {
         self.fetchedAt = fetchedAt
     }
 
+    public var availablePercent: Int? {
+        [self.fiveHour, self.weekly].compactMap { $0?.roundedRemainingPercent }.min()
+    }
+
     public var accessibilitySummary: String {
-        self.weekly.map { "Codex usage: week \($0.roundedRemainingPercent)% left" }
+        self.availablePercent.map { "Codex usage: \($0)% available" }
             ?? "Codex usage unavailable"
     }
 
