@@ -46,7 +46,7 @@ extension AppDelegate {
             self.menuBar = MenuBarPresentation()
             self.updateMenuBarActivity()
             self.updateStatusItem()
-            precondition(self.statusItem.length == 70, "Concurrent work must not widen the menu bar")
+            precondition(self.statusItem.length == 44, "Concurrent work must not widen the unknown-quota slot")
             precondition(self.statusItem.button!.subviews.compactMap { $0 as? GrokBallView }.isEmpty)
             precondition(self.characterView.animationLayer.superlayer === self.statusItem.button!.layer,
                          "Animation lives in an independent compositor layer, not the status image")
@@ -363,7 +363,7 @@ extension AppDelegate {
         RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.4))
         precondition(!self.statusPopover.popover.isShown)
         precondition(self.menuRefreshes == 1, "Status button close does not refresh")
-        precondition(self.statusItem.length == 70, "All providers share one fixed menu-bar slot")
+        precondition(self.statusItem.length == 60, "All providers share one compact two-digit quota slot")
         print("PASS: conversation groups; titles/projects; compact state icons; scroll; collapsed quota/detail; errors; refresh/toggle; light/dark captures")
     }
 }
